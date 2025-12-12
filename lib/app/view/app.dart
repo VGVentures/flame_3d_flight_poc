@@ -20,6 +20,7 @@ class App extends StatelessWidget {
             final cubit = PreloadCubit(
               Images(prefix: ''),
               AudioCache(prefix: ''),
+              AssetsCache(prefix: 'assets/objects'),
             );
             unawaited(cubit.loadSequentially());
             return cubit;

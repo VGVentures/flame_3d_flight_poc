@@ -10,10 +10,12 @@ import 'package:flutter/widgets.dart';
 part 'preload_state.dart';
 
 class PreloadCubit extends Cubit<PreloadState> {
-  PreloadCubit(this.images, this.audio) : super(const PreloadState.initial());
+  PreloadCubit(this.images, this.audio, this.assets)
+    : super(const PreloadState.initial());
 
   final Images images;
   final AudioCache audio;
+  final AssetsCache assets;
 
   /// Load items sequentially allows display of what is being loaded
   Future<void> loadSequentially() async {
@@ -25,6 +27,14 @@ class PreloadCubit extends Cubit<PreloadState> {
       PreloadPhase(
         'images',
         () => images.loadAll([Assets.images.unicornAnimation.path]),
+      ),
+      PreloadPhase(
+        'objects',
+        () => Future.wait([
+          assets.readFile('earth.glb'),
+          assets.readFile('moon.glb'),
+          assets.readFile('sun.glb'),
+        ]),
       ),
     ];
 
