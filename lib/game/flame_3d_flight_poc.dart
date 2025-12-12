@@ -3,7 +3,6 @@ import 'package:flame/cache.dart';
 import 'package:flame_3d/camera.dart';
 import 'package:flame_3d/components.dart';
 import 'package:flame_3d/game.dart';
-import 'package:flame_3d_flight_poc/game/components/earth_component.dart';
 import 'package:flame_3d_flight_poc/game/game.dart';
 import 'package:flame_3d_flight_poc/l10n/l10n.dart';
 import 'package:flutter/painting.dart';
@@ -33,13 +32,20 @@ class Flame3dFlightPoc extends FlameGame3D {
 
   @override
   Future<void> onLoad() async {
+    final earth = await EarthComponent.spawn(scale: 0.001);
+    final moon = await MoonComponent.spawn(
+      scale: 0.001,
+      position: earth.position + Vector3(20, 0, 0),
+    );
+
     final world = World3D(
       children: [
         LightComponent.ambient(
           intensity: 20,
         ),
         MilkyWayComponent(),
-        await EarthComponent.spawn(scale: 0.001),
+        earth,
+        moon,
       ],
     );
 
