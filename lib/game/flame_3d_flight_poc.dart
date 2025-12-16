@@ -25,8 +25,6 @@ class Flame3dFlightPoc extends FlameGame3D {
 
   int counter = 0;
 
-  CounterComponent? counterComponent;
-
   @override
   Color backgroundColor() => const Color(0xFF000000);
 
@@ -62,21 +60,6 @@ class Flame3dFlightPoc extends FlameGame3D {
       target: cameraTargetPosition,
     );
 
-    // add a HUD component showing number of taps on unicorn
-    counterComponent = CounterComponent(position: Vector2(0, 0));
-    camera.viewport.add(counterComponent!);
-    _positionCounterComponent(size);
-
     this.camera = camera;
-  }
-
-  @override
-  void onGameResize(Vector2 size) {
-    super.onGameResize(size);
-    _positionCounterComponent(size);
-  }
-
-  void _positionCounterComponent(Vector2 size) {
-    counterComponent?.position = Vector2(10, size.y - 10);
   }
 }
