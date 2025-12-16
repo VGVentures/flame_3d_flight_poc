@@ -32,10 +32,11 @@ class Flame3dFlightPoc extends FlameGame3D {
 
   @override
   Future<void> onLoad() async {
-    final earth = await EarthComponent.spawn(scale: 0.001);
+    const earthRadius = 10.0;
+    final earth = EarthComponent(radius: earthRadius);
     final moon = await MoonComponent.spawn(
-      scale: 0.001,
-      position: earth.position + Vector3(20, 0, 0),
+      scale: 0.5,
+      position: earth.position + Vector3(20, 20, 0),
     );
 
     final world = World3D(
@@ -51,10 +52,14 @@ class Flame3dFlightPoc extends FlameGame3D {
 
     this.world = world;
 
+    const cameraRadius = earthRadius + 0.05;
+    final cameraPosition = Vector3(0, cameraRadius, 0);
+    final cameraTargetPosition = Vector3(0.1, cameraRadius, 0.1);
+
     final camera = CameraComponent3D(
       world: world,
-      position: Vector3(-18, 0, -18),
-      target: Vector3.zero(),
+      position: cameraPosition,
+      target: cameraTargetPosition,
     );
 
     // add a HUD component showing number of taps on unicorn
