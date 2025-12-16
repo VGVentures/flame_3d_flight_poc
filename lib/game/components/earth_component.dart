@@ -1,18 +1,29 @@
 import 'dart:async';
 
 import 'package:flame/components.dart';
-import 'package:flame_3d/model.dart';
-import 'package:flame_3d/parser.dart';
+import 'package:flame/flame.dart';
+import 'package:flame_3d/components.dart';
+import 'package:flame_3d/resources.dart';
 import 'package:flame_3d_flight_poc/game/game.dart';
 
-class EarthComponent extends ModelComponent
+class EarthComponent extends MeshComponent
     with HasGameReference<Flame3dFlightPoc> {
-  EarthComponent({required super.model, super.scale});
+  EarthComponent({required double radius})
+    : super(
+        mesh: SphereMesh(
+          radius: radius,
+        ),
+      );
 
-  static Future<EarthComponent> spawn({double scale = 1}) async {
-    return EarthComponent(
-      model: await ModelParser.parse('objects/earth.glb'),
-      scale: Vector3.all(scale)
+  @override
+  FutureOr<void> onLoad() async {
+    final milkyWayTexture = await Flame.images.loadTexture(
+      'earth2048.bmp',
     );
+    mesh.updateSurfaces((surfaces) {
+      surfaces[0].material = SpatialMaterial(
+        albedoTexture: milkyWayTexture,
+      );
+    });
   }
 }
