@@ -92,7 +92,103 @@ class _GameViewState extends State<GameView> {
             ),
           ),
         ),
+        if (_game is Flame3dFlightPoc)
+          SafeArea(
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: _DPadControls(game: _game! as Flame3dFlightPoc),
+              ),
+            ),
+          ),
       ],
+    );
+  }
+}
+
+class _DPadControls extends StatelessWidget {
+  const _DPadControls({required this.game});
+
+  final Flame3dFlightPoc game;
+
+  @override
+  Widget build(BuildContext context) {
+    const size = 48.0;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(width: size),
+            _ArrowButton(
+              icon: Icons.keyboard_arrow_up,
+              onStart: () => game.startMove(MoveDirection.forward),
+              onStop: () => game.stopMove(MoveDirection.forward),
+            ),
+            const SizedBox(width: size),
+          ],
+        ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _ArrowButton(
+              icon: Icons.keyboard_arrow_left,
+              onStart: () => game.startMove(MoveDirection.left),
+              onStop: () => game.stopMove(MoveDirection.left),
+            ),
+            const SizedBox(width: size),
+            _ArrowButton(
+              icon: Icons.keyboard_arrow_right,
+              onStart: () => game.startMove(MoveDirection.right),
+              onStop: () => game.stopMove(MoveDirection.right),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(width: size),
+            _ArrowButton(
+              icon: Icons.keyboard_arrow_down,
+              onStart: () => game.startMove(MoveDirection.backward),
+              onStop: () => game.stopMove(MoveDirection.backward),
+            ),
+            const SizedBox(width: size),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _ArrowButton extends StatelessWidget {
+  const _ArrowButton({
+    required this.icon,
+    required this.onStart,
+    required this.onStop,
+  });
+
+  final IconData icon;
+  final VoidCallback onStart;
+  final VoidCallback onStop;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: (_) => onStart(),
+      onTapUp: (_) => onStop(),
+      onTapCancel: onStop,
+      child: Container(
+        width: 48,
+        height: 48,
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(51, 255, 255, 255),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(icon, color: Colors.white),
+      ),
     );
   }
 }
