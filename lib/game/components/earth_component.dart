@@ -12,7 +12,6 @@ class EarthComponent extends MeshComponent
     : super(
         mesh: SphereMesh(
           radius: radius,
-          segments: 256
         ),
       );
 
