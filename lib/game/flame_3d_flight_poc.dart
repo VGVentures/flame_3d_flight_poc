@@ -10,7 +10,16 @@ import 'package:flame_3d_flight_poc/game/game.dart';
 import 'package:flame_3d_flight_poc/l10n/l10n.dart';
 import 'package:flutter/painting.dart';
 
-enum MoveDirection { forward, backward, left, right }
+enum MoveDirection {
+  forward,
+  backward,
+  left,
+  right,
+  up,
+  down,
+  pitchUp,
+  pitchDown,
+}
 
 class Flame3dFlightPoc extends FlameGame3D {
   Flame3dFlightPoc({
@@ -29,9 +38,16 @@ class Flame3dFlightPoc extends FlameGame3D {
   int counter = 0;
 
   static const double _earthRadius = 10;
-  static const double _cameraRadius = _earthRadius + 0.05;
+  static const double _minAltitude = _earthRadius + 0.05;
+  static const double _maxAltitude = _earthRadius + 30;
+  static const double _altitudeSpeed = 5; // units/s
   static const double _moveSpeed = 0.8; // radians/s — orbiting speed
   static const double _lookSpeed = 1; // radians/s — turning speed
+  static const double _pitchSpeed = 1; // radians/s
+  static const double _maxPitch = math.pi / 3; // ±60°
+
+  double _cameraRadius = _minAltitude;
+  double _pitchAngle = 0;
 
   // Unit vector from Earth center toward the camera.
   final Vector3 _cameraDir = Vector3(0, 1, 0);
@@ -97,6 +113,30 @@ class Flame3dFlightPoc extends FlameGame3D {
     if (_activeDirections.contains(MoveDirection.right)) {
       _rotateVec(_cameraForward, _cameraDir, -_lookSpeed * dt);
     }
+    if (_activeDirections.contains(MoveDirection.up)) {
+      _cameraRadius = (_cameraRadius + _altitudeSpeed * dt).clamp(
+        _minAltitude,
+        _maxAltitude,
+      );
+    }
+    if (_activeDirections.contains(MoveDirection.down)) {
+      _cameraRadius = (_cameraRadius - _altitudeSpeed * dt).clamp(
+        _minAltitude,
+        _maxAltitude,
+      );
+    }
+    if (_activeDirections.contains(MoveDirection.pitchUp)) {
+      _pitchAngle = (_pitchAngle + _pitchSpeed * dt).clamp(
+        -_maxPitch,
+        _maxPitch,
+      );
+    }
+    if (_activeDirections.contains(MoveDirection.pitchDown)) {
+      _pitchAngle = (_pitchAngle - _pitchSpeed * dt).clamp(
+        -_maxPitch,
+        _maxPitch,
+      );
+    }
 
     // Gram-Schmidt re-orthogonalization to prevent floating-point drift.
     _cameraDir.normalize();
@@ -123,7 +163,11 @@ class Flame3dFlightPoc extends FlameGame3D {
 
   void _updateCamera() {
     _camera3d.position = _cameraDir * _cameraRadius;
-    _camera3d.target = _camera3d.position + _cameraForward * 0.1;
+    // Rotate look direction toward _cameraDir (up) by _pitchAngle.
+    final cosP = math.cos(_pitchAngle);
+    final sinP = math.sin(_pitchAngle);
+    final lookDir = _cameraForward * cosP + _cameraDir * sinP;
+    _camera3d.target = _camera3d.position + lookDir * 0.1;
     _camera3d.up = _cameraDir;
   }
 }

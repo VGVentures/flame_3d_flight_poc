@@ -102,6 +102,26 @@ class _GameViewState extends State<GameView> {
               ),
             ),
           ),
+        if (_game is Flame3dFlightPoc)
+          SafeArea(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: _PitchControls(game: _game! as Flame3dFlightPoc),
+              ),
+            ),
+          ),
+        if (_game is Flame3dFlightPoc)
+          SafeArea(
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: _AltitudeControls(game: _game! as Flame3dFlightPoc),
+              ),
+            ),
+          ),
       ],
     );
   }
@@ -157,6 +177,58 @@ class _DPadControls extends StatelessWidget {
             ),
             const SizedBox(width: size),
           ],
+        ),
+      ],
+    );
+  }
+}
+
+class _AltitudeControls extends StatelessWidget {
+  const _AltitudeControls({required this.game});
+
+  final Flame3dFlightPoc game;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _ArrowButton(
+          icon: Icons.add,
+          onStart: () => game.startMove(MoveDirection.up),
+          onStop: () => game.stopMove(MoveDirection.up),
+        ),
+        const SizedBox(height: 8),
+        _ArrowButton(
+          icon: Icons.remove,
+          onStart: () => game.startMove(MoveDirection.down),
+          onStop: () => game.stopMove(MoveDirection.down),
+        ),
+      ],
+    );
+  }
+}
+
+class _PitchControls extends StatelessWidget {
+  const _PitchControls({required this.game});
+
+  final Flame3dFlightPoc game;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _ArrowButton(
+          icon: Icons.keyboard_arrow_up,
+          onStart: () => game.startMove(MoveDirection.pitchUp),
+          onStop: () => game.stopMove(MoveDirection.pitchUp),
+        ),
+        const SizedBox(height: 8),
+        _ArrowButton(
+          icon: Icons.keyboard_arrow_down,
+          onStart: () => game.startMove(MoveDirection.pitchDown),
+          onStop: () => game.stopMove(MoveDirection.pitchDown),
         ),
       ],
     );
