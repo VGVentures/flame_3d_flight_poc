@@ -38,7 +38,7 @@ class Flame3dFlightPoc extends FlameGame3D {
   int counter = 0;
 
   static const double _earthRadius = 10;
-  static const double _minAltitude = _earthRadius + 0.05;
+  static const double _minAltitude = _earthRadius + 0.8;
   static const double _maxAltitude = _earthRadius + 30;
   static const double _altitudeSpeed = 5; // units/s
   static const double _moveSpeed = 0.8; // radians/s — orbiting speed
@@ -67,18 +67,21 @@ class Flame3dFlightPoc extends FlameGame3D {
 
   @override
   Future<void> onLoad() async {
-    final earth = EarthComponent(radius: _earthRadius);
+    final earth = await EarthComponent.spawn(radius: _earthRadius);
     final moon = await MoonComponent.spawn(
       scale: 0.5,
-      position: earth.position + Vector3(20, 20, 0),
+      position: earth.position + Vector3(15, 15, 0),
     );
+
+    final sun = SunComponent(radius: 5, position: Vector3(150, 500, 0));
 
     final world = World3D(
       children: [
-        LightComponent.ambient(intensity: 20),
+        LightComponent.ambient(intensity: 2),
         MilkyWayComponent(),
         earth,
         moon,
+        sun,
       ],
     );
 

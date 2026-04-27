@@ -76,22 +76,6 @@ class _GameViewState extends State<GameView> {
     return Stack(
       children: [
         Positioned.fill(child: GameWidget(game: _game!)),
-        SafeArea(
-          child: Align(
-            alignment: Alignment.topRight,
-            child: BlocBuilder<AudioCubit, AudioState>(
-              builder: (context, state) {
-                return IconButton(
-                  icon: Icon(
-                    state.volume == 0 ? Icons.volume_off : Icons.volume_up,
-                    color: Colors.white,
-                  ),
-                  onPressed: () => context.read<AudioCubit>().toggleVolume(),
-                );
-              },
-            ),
-          ),
-        ),
         if (_game is Flame3dFlightPoc)
           SafeArea(
             child: Align(
