@@ -12,13 +12,14 @@ class EarthComponent extends MeshComponent
     : super(
         mesh: SphereMesh(
           radius: radius,
+          segments: 256
         ),
       );
 
   @override
   FutureOr<void> onLoad() async {
     final milkyWayTexture = await Flame.images.loadTexture(
-      'earth2048.bmp',
+      '8k_earth_daymap.jpg',
     );
     mesh.updateSurfaces((surfaces) {
       surfaces[0].material = SpatialMaterial(
